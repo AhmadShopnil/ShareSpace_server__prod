@@ -3,6 +3,7 @@ import { flatController } from './flat.controller';
 
 const router = Router();
 
-router.post('/', flatController.addFlat);
+router.post('/add', flatController.addFlat);
+router.get('/', flatController.getAllflats);
 
 export const flatRoutes = router;

@@ -1,13 +1,31 @@
 import { Request, Response } from 'express';
 import { flatServices } from './flat.services';
 
-const addFlat = (req: Request, res: Response) => {
+const addFlat = async (req: Request, res: Response) => {
   try {
-    const result = flatServices.addFlatToDb();
+    const { flatData } = req.body;
+
+    const result = await flatServices.addFlatToDb(flatData);
+    // console.log('from controller', result);
     res.status(201).json({
       success: true,
       statusCode: 201,
-      message: 'Flat aded successfully ',
+      message: 'Flat added successfully ',
+      data: result,
+    });
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.log(error);
+  }
+};
+const getAllflats = async (req: Request, res: Response) => {
+  try {
+    const result = await flatServices.getAllFlatsFromDb();
+    // console.log('from controller', result);
+    res.status(201).json({
+      success: true,
+      statusCode: 201,
+      message: 'Get All Flats successfully ',
       data: result,
     });
   } catch (error) {
@@ -18,4 +36,5 @@ const addFlat = (req: Request, res: Response) => {
 
 export const flatController = {
   addFlat,
+  getAllflats,
 };

@@ -5,7 +5,7 @@ const router = Router();
 
 const moduleRoutes = [
   {
-    path: '/courses',
+    path: '/flats',
     route: flatRoutes,
   },
 ];
