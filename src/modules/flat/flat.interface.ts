@@ -7,4 +7,5 @@ export type TFlat = {
   rent: number;
   advanceAmount: number;
   availability: boolean;
+  postStatus: 'approved' | 'rejected' | 'pending';
 };

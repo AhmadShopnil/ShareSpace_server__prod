@@ -5,35 +5,37 @@ const flatSchema = new Schema<TFlat>(
   {
     title: {
       type: String,
-      require: true,
+      required: true,
     },
     totalBedrooms: {
       type: Number,
-
-      require: true,
+      unique: true,
+      required: true,
     },
     location: {
       type: String,
-
-      require: true,
+      required: true,
     },
     description: {
       type: String,
-
-      require: true,
+      required: true,
     },
     rent: {
       type: Number,
-
-      require: true,
+      required: true,
     },
     advanceAmount: {
       type: Number,
-      require: true,
+      required: true,
     },
     availability: {
       type: Boolean,
-      require: true,
+      required: true,
+    },
+    postStatus: {
+      type: String,
+      enum: ['approved', 'rejected', 'pending'],
+      required: true,
     },
   },
   {
