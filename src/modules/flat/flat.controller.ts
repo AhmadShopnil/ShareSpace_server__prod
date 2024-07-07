@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
 import { flatServices } from './flat.services';
-import { modifyFlatData } from '../../utils/modifyPayload/modifyPayload';
 
 const addFlat = async (req: Request, res: Response) => {
   try {
-    const { flatData } = req.body;
+    const flatData = JSON.parse(req.body.flatData);
+    const userData = JSON.parse(req.body.userData);
 
-    // use utils function to add some extra data with flatData
-    const modifiedFlatDta = modifyFlatData(flatData);
+    const result = await flatServices.addFlatToDb({
+      flatData,
+      userData,
+    });
 
-    const result = await flatServices.addFlatToDb(modifiedFlatDta);
-    // console.log('from controller', result);
     res.status(201).json({
       success: true,
       statusCode: 201,
@@ -40,6 +40,23 @@ const getAllflats = async (req: Request, res: Response) => {
   }
 };
 
+const getSingleFlatById = async (req: Request, res: Response) => {
+  try {
+    const { flatId } = req.params;
+
+    const result = await flatServices.getFlatFromDbById(flatId);
+    // console.log('from controller', result);
+    res.status(201).json({
+      success: true,
+      statusCode: 201,
+      message: 'Get Flat  successfully ',
+      data: result,
+    });
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.log(error);
+  }
+};
 const deleteFlatById = async (req: Request, res: Response) => {
   try {
     const { flatId } = req.params;
@@ -86,4 +103,5 @@ export const flatController = {
   getAllflats,
   deleteFlatById,
   updateFlatById,
+  getSingleFlatById,
 };

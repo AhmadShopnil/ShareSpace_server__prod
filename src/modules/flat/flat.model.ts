@@ -3,13 +3,17 @@ import { TFlat } from './flat.interface';
 
 const flatSchema = new Schema<TFlat>(
   {
+    ownerId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'User', // Assuming there's a User model
+    },
     title: {
       type: String,
       required: true,
     },
     totalBedrooms: {
       type: Number,
-      unique: true,
       required: true,
     },
     location: {

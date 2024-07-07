@@ -1,5 +1,8 @@
+import { Types } from 'mongoose';
+
 export type TFlat = {
   //   id: Types.ObjectId;
+  ownerId: Types.ObjectId;
   totalBedrooms: number;
   title: string;
   location: string;
