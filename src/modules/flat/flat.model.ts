@@ -6,7 +6,7 @@ const flatSchema = new Schema<TFlat>(
     ownerId: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: 'User', // Assuming there's a User model
+      ref: 'User', // Arefereace with  User model
     },
     title: {
       type: String,
@@ -39,6 +39,15 @@ const flatSchema = new Schema<TFlat>(
     postStatus: {
       type: String,
       enum: ['approved', 'rejected', 'pending'],
+      required: true,
+    },
+    category: {
+      type: String,
+      enum: ['Flat', 'Tin-Shade', 'Tiner-ghor'],
+      required: true,
+    },
+    images: {
+      type: [String],
       required: true,
     },
   },

@@ -9,6 +9,8 @@ import jwt, { Secret } from 'jsonwebtoken';
 import config from '../../config';
 import { jwtHelpers } from '../../utils/jwtHelpers';
 import { modifyFlatData } from '../../utils/modifyPayload';
+import QueryBuilder from '../../Builders/QueryBuilder';
+import { flatSearchableFields } from './flat.constant';
 
 const addFlatToDb = async ({
   flatData,
@@ -21,8 +23,12 @@ const addFlatToDb = async ({
   let accessToken;
 
   // check if already user exits
-  const phone = userData.phone;
+  const phone = userData?.phone;
+  // console.log(phone);
+
   const existingUser = await User.findOne({ phone });
+
+  // console.log(existingUser);
 
   if (!existingUser) {
     const createdUser = await User.create(userData);
@@ -64,10 +70,43 @@ const addFlatToDb = async ({
   };
 };
 
-const getAllFlatsFromDb = async () => {
-  const result = await Flat.find();
+const getAllFlatsFromDb = async (query: Record<string, unknown>) => {
+  const flatQuery = new QueryBuilder(Flat.find(), query)
+    .search(flatSearchableFields)
+    .filter()
+    .rangeFilter()
+    .sort()
+    .paginate()
+    .fields();
 
-  return result;
+  const meta = await flatQuery.countTotal();
+  const result = await flatQuery.modelQuery;
+
+  return {
+    meta,
+    result,
+  };
+};
+const getFlatFromDbByUser = async (ownerId: string) => {
+  // Check if the provided ID is valid
+  if (!mongoose.Types.ObjectId.isValid(ownerId)) {
+    throw new Error('Invalid ID format');
+  }
+
+  let query = {};
+  if (ownerId) {
+    query = { ownerId: ownerId };
+  }
+
+  // Attempt to update the flat
+  const flat = await Flat.find(query).populate('ownerId');
+
+  // Check if a document was updated
+  if (!flat) {
+    throw new Error('Not found any posted flat of this user');
+  }
+
+  return flat;
 };
 const getFlatFromDbById = async (id: string) => {
   // Check if the provided ID is valid
@@ -105,14 +144,42 @@ const updateFlatIntoDbById = async (id: string, updateData: Partial<TFlat>) => {
   return updatedFlat;
 };
 
-const deleteFlatFromDbById = async (id: string) => {
-  // Attempt to delete the flat
-  const result = await Flat.findByIdAndDelete(id);
+// const deleteFlatFromDbById = async (id: string) => {
+//   // Attempt to delete the flat
+//   const result = await Flat.findByIdAndDelete(id);
 
-  // Check if a document was deleted or not found the document
-  if (!result) {
-    throw new Error('Flat not found');
+//   // Check if a document was deleted or not found the document
+//   if (!result) {
+//     throw new Error('Flat not found');
+//   }
+//   return result;
+// };
+
+const deleteFlatFromDbById = async ({
+  flatId,
+  ownerId,
+}: {
+  flatId: string;
+  ownerId: string;
+}) => {
+  // Find the flat by its ID
+  const flat = await Flat.findById({ _id: flatId });
+
+  // Check if the flat exists
+  // if (!flat) {
+  //   throw new Error('No Flat found');
+  // }
+
+  // Check if the ownerId matches
+
+  if (flat?.ownerId.toString() !== ownerId) {
+    throw new Error('Unauthorized: ownerId does not match');
   }
+
+  // Attempt to delete the flat
+  const result = await Flat.findByIdAndDelete({ _id: flatId });
+
+  // Return the result of the deletion
   return result;
 };
 
@@ -122,4 +189,5 @@ export const flatServices = {
   deleteFlatFromDbById,
   updateFlatIntoDbById,
   getFlatFromDbById,
+  getFlatFromDbByUser,
 };

@@ -11,4 +11,6 @@ export type TFlat = {
   advanceAmount: number;
   availability: boolean;
   postStatus: 'approved' | 'rejected' | 'pending';
+  category: 'Flat' | 'Tin-Shade' | 'Tiner-ghor';
+  images: string[];
 };

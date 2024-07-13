@@ -4,8 +4,10 @@ import { flatServices } from './flat.services';
 
 const addFlat = async (req: Request, res: Response) => {
   try {
-    const flatData = JSON.parse(req.body.flatData);
-    const userData = JSON.parse(req.body.userData);
+    const { flatData, userData } = req.body;
+
+    // console.log('flat', flatData);
+    // console.log('user', userData);
 
     const result = await flatServices.addFlatToDb({
       flatData,
@@ -26,7 +28,7 @@ const addFlat = async (req: Request, res: Response) => {
 
 const getAllflats = async (req: Request, res: Response) => {
   try {
-    const result = await flatServices.getAllFlatsFromDb();
+    const result = await flatServices.getAllFlatsFromDb(req.query);
     // console.log('from controller', result);
     res.status(201).json({
       success: true,
@@ -40,6 +42,25 @@ const getAllflats = async (req: Request, res: Response) => {
   }
 };
 
+const getFlatByUserId = async (req: any, res: Response) => {
+  try {
+    const ownerId = req?.user?._id as string;
+
+    // console.log(req?.user);
+
+    const result = await flatServices.getFlatFromDbByUser(ownerId);
+    // console.log('from controller', result);
+    res.status(201).json({
+      success: true,
+      statusCode: 201,
+      message: 'Get Flat  successfully ',
+      data: result,
+    });
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.log(error);
+  }
+};
 const getSingleFlatById = async (req: Request, res: Response) => {
   try {
     const { flatId } = req.params;
@@ -57,11 +78,12 @@ const getSingleFlatById = async (req: Request, res: Response) => {
     console.log(error);
   }
 };
-const deleteFlatById = async (req: Request, res: Response) => {
+const deleteFlatById = async (req: any, res: Response) => {
   try {
     const { flatId } = req.params;
+    const ownerId = req?.user?._id as string;
 
-    const result = await flatServices.deleteFlatFromDbById(flatId);
+    const result = await flatServices.deleteFlatFromDbById({ flatId, ownerId });
     // console.log('from controller', result);
     res.status(201).json({
       success: true,
@@ -104,4 +126,5 @@ export const flatController = {
   deleteFlatById,
   updateFlatById,
   getSingleFlatById,
+  getFlatByUserId,
 };
