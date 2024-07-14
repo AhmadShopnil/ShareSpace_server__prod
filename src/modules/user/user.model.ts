@@ -10,6 +10,10 @@ const userSchema = new Schema<TUser>({
     type: String,
     require: true,
   },
+  role: {
+    type: String,
+    enum: ['super-admin', 'user', 'manager', 'admin'],
+  },
   password: {
     type: String,
     require: true,

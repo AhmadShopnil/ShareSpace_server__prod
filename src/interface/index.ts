@@ -9,3 +9,8 @@ export type TUserTwtPayload = {
 export interface CustomRequest extends Request {
   user?: TUserTwtPayload;
 }
+
+export type TLoginUserPayload = {
+  phone: string;
+  password: string;
+};
