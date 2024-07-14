@@ -59,7 +59,7 @@ const addFlatToDb = async ({
       '10days',
     );
   }
-  // use utils function to add some extra data with flatData
+  // use utils function To add some extra data with flatData
   const modifiedFlatDta = modifyFlatData({ flatData, ownerId });
 
   const addedFlat = await Flat.create(modifiedFlatDta);
