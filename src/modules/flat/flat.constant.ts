@@ -3,4 +3,5 @@ export const flatSearchableFields = [
   'category',
   'title',
   'description',
+  // 'totalBedrooms',
 ];

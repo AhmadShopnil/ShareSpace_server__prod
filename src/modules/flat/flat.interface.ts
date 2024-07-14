@@ -4,6 +4,7 @@ export type TFlat = {
   //   id: Types.ObjectId;
   ownerId: Types.ObjectId;
   totalBedrooms: number;
+  totalBathrooms: number;
   title: string;
   location: string;
   description: string;

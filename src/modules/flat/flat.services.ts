@@ -80,11 +80,11 @@ const getAllFlatsFromDb = async (query: Record<string, unknown>) => {
     .fields();
 
   const meta = await flatQuery.countTotal();
-  const result = await flatQuery.modelQuery;
+  const flats = await flatQuery.modelQuery;
 
   return {
     meta,
-    result,
+    flats,
   };
 };
 const getFlatFromDbByUser = async (ownerId: string) => {

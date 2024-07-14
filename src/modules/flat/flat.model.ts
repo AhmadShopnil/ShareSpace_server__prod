@@ -16,6 +16,10 @@ const flatSchema = new Schema<TFlat>(
       type: Number,
       required: true,
     },
+    totalBathrooms: {
+      type: Number,
+      required: true,
+    },
     location: {
       type: String,
       required: true,

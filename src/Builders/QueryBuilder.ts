@@ -37,6 +37,7 @@ class QueryBuilder<T> {
       'fields',
       'minRent',
       'maxRent',
+      // 'location',
     ];
 
     excludeFields.forEach((el) => delete queryObj[el]);
