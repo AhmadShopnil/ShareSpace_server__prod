@@ -11,6 +11,7 @@ export const modifyFlatData = ({
 }) => {
   flatData.postStatus = 'pending';
   flatData.availability = true;
+  flatData.isDeleted = false;
   flatData.ownerId = ownerId;
   return flatData as TFlat;
 };

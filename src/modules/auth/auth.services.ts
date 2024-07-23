@@ -9,7 +9,7 @@ import { createToken } from './auth.utils';
 const login = async (payload: any) => {
   const isUserExist = await User.findOne({ phone: payload?.phone });
 
-  if (!isUserExist) {
+  if (!isUserExist?.phone) {
     throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
   }
 

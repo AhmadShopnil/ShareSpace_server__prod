@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import { authServices } from './auth.services';
 
 const loginUser = async (req: Request, res: Response, next: NextFunction) => {
+  // console.log('form controller login', req.body);
+
   try {
     const result = await authServices.login(req.body);
 

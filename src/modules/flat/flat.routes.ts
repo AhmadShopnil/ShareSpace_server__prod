@@ -13,9 +13,10 @@ router.post(
 );
 router.get('/myPostedHouse', auth(), flatController.getFlatByUserId);
 router.get('/:flatId', flatController.getSingleFlatById);
-router.delete('/:flatId', auth(), flatController.deleteFlatById);
-router.put('/:flatId', auth(), flatController.updateFlatById);
 
+router.delete('/:flatId', auth(), flatController.deleteFlatById);
+
+router.put('/:flatId', auth(), flatController.updateFlatById);
 router.get('/', flatController.getAllflats);
 
 export const flatRoutes = router;

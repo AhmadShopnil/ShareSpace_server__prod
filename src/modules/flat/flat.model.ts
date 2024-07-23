@@ -40,6 +40,10 @@ const flatSchema = new Schema<TFlat>(
       type: Boolean,
       required: true,
     },
+    isDeleted: {
+      type: Boolean,
+      required: true,
+    },
     postStatus: {
       type: String,
       enum: ['approved', 'rejected', 'pending'],

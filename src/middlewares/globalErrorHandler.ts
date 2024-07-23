@@ -4,9 +4,9 @@
 import { ErrorRequestHandler } from 'express';
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
-  let statusCode = 500;
+  let statusCode = err.statusCode || 500;
   let errorMessage = err.message || ' Something wrong!';
-  let errorDetails = err;
+  let errorDetails = err || {};
 
   return res.status(statusCode).json({
     success: false,

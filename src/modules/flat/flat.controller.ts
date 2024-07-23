@@ -1,13 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { flatServices } from './flat.services';
 
-const addFlat = async (req: Request, res: Response) => {
+const addFlat = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { flatData, userData } = req.body;
-
-    // console.log('flat', flatData);
-    // console.log('user', userData);
 
     const result = await flatServices.addFlatToDb({
       flatData,
@@ -22,11 +19,11 @@ const addFlat = async (req: Request, res: Response) => {
     });
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.log(error);
+    next(error);
   }
 };
 
-const getAllflats = async (req: Request, res: Response) => {
+const getAllflats = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await flatServices.getAllFlatsFromDb(req.query);
     // console.log('from controller', result);
@@ -38,7 +35,7 @@ const getAllflats = async (req: Request, res: Response) => {
     });
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.log(error);
+    next(error);
   }
 };
 
@@ -78,7 +75,7 @@ const getSingleFlatById = async (req: Request, res: Response) => {
     console.log(error);
   }
 };
-const deleteFlatById = async (req: any, res: Response) => {
+const deleteFlatById = async (req: any, res: Response, next: NextFunction) => {
   try {
     const { flatId } = req.params;
     const ownerId = req?.user?._id as string;
@@ -92,8 +89,7 @@ const deleteFlatById = async (req: any, res: Response) => {
       data: result,
     });
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.log(error);
+    next(error);
   }
 };
 const updateFlatById = async (req: Request, res: Response) => {

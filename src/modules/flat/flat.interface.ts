@@ -11,7 +11,8 @@ export type TFlat = {
   rent: number;
   advanceAmount: number;
   availability: boolean;
+  isDeleted?: boolean;
   postStatus: 'approved' | 'rejected' | 'pending';
   category: 'Flat' | 'Tin-Shade' | 'Tiner-ghor';
-  images: string[];
+  images?: string[] | null;
 };

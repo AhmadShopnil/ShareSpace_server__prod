@@ -71,7 +71,7 @@ const addFlatToDb = async ({
 };
 
 const getAllFlatsFromDb = async (query: Record<string, unknown>) => {
-  const flatQuery = new QueryBuilder(Flat.find(), query)
+  const flatQuery = new QueryBuilder(Flat.find({ isDeleted: false }), query)
     .search(flatSearchableFields)
     .filter()
     .rangeFilter()
@@ -95,7 +95,7 @@ const getFlatFromDbByUser = async (ownerId: string) => {
 
   let query = {};
   if (ownerId) {
-    query = { ownerId: ownerId };
+    query = { ownerId: ownerId, isDeleted: false };
   }
 
   // Attempt to update the flat
@@ -166,9 +166,9 @@ const deleteFlatFromDbById = async ({
   const flat = await Flat.findById({ _id: flatId });
 
   // Check if the flat exists
-  // if (!flat) {
-  //   throw new Error('No Flat found');
-  // }
+  if (!flat) {
+    throw new Error('No Flat found');
+  }
 
   // Check if the ownerId matches
 
@@ -176,8 +176,18 @@ const deleteFlatFromDbById = async ({
     throw new Error('Unauthorized: ownerId does not match');
   }
 
-  // Attempt to delete the flat
-  const result = await Flat.findByIdAndDelete({ _id: flatId });
+  // Attempt to soft delete the flat
+  const result = await Flat.findByIdAndUpdate(
+    { _id: flatId },
+    { isDeleted: true },
+    {
+      new: true,
+      runValidators: true,
+    },
+  );
+
+  // Attempt to hard delete the flat
+  // const result = await Flat.findByIdAndDelete({ _id: flatId });
 
   // Return the result of the deletion
   return result;
