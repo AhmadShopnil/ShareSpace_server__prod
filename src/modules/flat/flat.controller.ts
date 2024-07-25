@@ -26,7 +26,7 @@ const addFlat = async (req: Request, res: Response, next: NextFunction) => {
 const getAllflats = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await flatServices.getAllFlatsFromDb(req.query);
-    // console.log('from controller', result);
+
     res.status(201).json({
       success: true,
       statusCode: 201,
@@ -34,19 +34,16 @@ const getAllflats = async (req: Request, res: Response, next: NextFunction) => {
       data: result,
     });
   } catch (error) {
-    // eslint-disable-next-line no-console
     next(error);
   }
 };
 
-const getFlatByUserId = async (req: any, res: Response) => {
+const getFlatByUserId = async (req: any, res: Response, next: NextFunction) => {
   try {
     const ownerId = req?.user?._id as string;
 
-    // console.log(req?.user);
-
     const result = await flatServices.getFlatFromDbByUser(ownerId);
-    // console.log('from controller', result);
+
     res.status(201).json({
       success: true,
       statusCode: 201,
@@ -54,11 +51,14 @@ const getFlatByUserId = async (req: any, res: Response) => {
       data: result,
     });
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.log(error);
+    next(error);
   }
 };
-const getSingleFlatById = async (req: Request, res: Response) => {
+const getSingleFlatById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { flatId } = req.params;
 
@@ -71,8 +71,7 @@ const getSingleFlatById = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.log(error);
+    next(error);
   }
 };
 const deleteFlatById = async (req: any, res: Response, next: NextFunction) => {
@@ -92,7 +91,11 @@ const deleteFlatById = async (req: any, res: Response, next: NextFunction) => {
     next(error);
   }
 };
-const updateFlatById = async (req: Request, res: Response) => {
+const updateFlatById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { flatId } = req.params;
     const { updatedData } = req.body;
@@ -106,14 +109,28 @@ const updateFlatById = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error: any) {
-    // eslint-disable-next-line no-console
-    console.log(error);
+    next(error);
+  }
+};
+const updateFlatPostStatus = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { flatId } = req.params;
+    const { status } = req.body;
+
+    const result = await flatServices.updateFlatIntoDbById(flatId, status);
+
     res.status(201).json({
-      success: false,
-      statusCode: 400,
-      message: error?.message,
-      error: error,
+      success: true,
+      statusCode: 201,
+      message: 'Flat Post Status updated successfully ',
+      data: result,
     });
+  } catch (error: any) {
+    next(error);
   }
 };
 export const flatController = {
@@ -123,4 +140,5 @@ export const flatController = {
   updateFlatById,
   getSingleFlatById,
   getFlatByUserId,
+  updateFlatPostStatus,
 };

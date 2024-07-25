@@ -188,6 +188,30 @@ const deleteFlatFromDbById = async ({
   return result;
 };
 
+const updateFlatPostStatusintoDb = async (id: string, status: string) => {
+  // Check if the provided ID is valid
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new Error('Invalid ID format');
+  }
+
+  // Attempt to update the flat
+  const updatedStatus = await Flat.findByIdAndUpdate(
+    id,
+    { postStatus: status },
+    {
+      new: true,
+      runValidators: true,
+    },
+  );
+
+  // Check if a document was updated
+  if (!updatedStatus) {
+    throw new Error('faild to update status');
+  }
+
+  return updatedStatus;
+};
+
 export const flatServices = {
   addFlatToDb,
   getAllFlatsFromDb,
@@ -195,4 +219,5 @@ export const flatServices = {
   updateFlatIntoDbById,
   getFlatFromDbById,
   getFlatFromDbByUser,
+  updateFlatPostStatusintoDb,
 };
