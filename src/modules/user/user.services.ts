@@ -5,16 +5,24 @@ import jwt from 'jsonwebtoken';
 import config from '../../config';
 
 const createUserToDb = async (payload: TUser) => {
-  const createdUser = await User.create(payload);
+  const userData = {
+    name: payload?.name,
+    phone: payload?.phone,
+    role: 'user',
+    password: payload?.password,
+  };
+  const createdUser = await User.create(userData);
 
   // jwt create access token for new registrated user
   const jwtPayload = {
-    _id: createdUser._id,
-    phone: createdUser.phone,
+    _id: createdUser?._id,
+    phone: createdUser?.phone,
+    name: createdUser?.name,
+    role: createdUser?.role,
   };
 
   const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
-    expiresIn: '10days',
+    expiresIn: '30days',
   });
   const { name, phone } = createdUser;
   const user = { name, phone };

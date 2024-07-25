@@ -11,6 +11,8 @@ import { jwtHelpers } from '../../utils/jwtHelpers';
 import { modifyFlatData } from '../../utils/modifyPayload';
 import QueryBuilder from '../../Builders/QueryBuilder';
 import { flatSearchableFields } from './flat.constant';
+import { TUserJwtPayload } from '../../interface';
+import createJwtPayload from '../../utils/createJwtPayload';
 
 const addFlatToDb = async ({
   flatData,
@@ -28,30 +30,23 @@ const addFlatToDb = async ({
 
   const existingUser = await User.findOne({ phone });
 
-  // console.log(existingUser);
-
+  //if user already not exit create a user first
   if (!existingUser) {
     const createdUser = await User.create(userData);
     ownerId = createdUser.id;
 
     // jwt create access token for new registrated user
-    const jwtPayload = {
-      _id: createdUser._id,
-      phone: createdUser.phone,
-      name: createdUser.name,
-    };
+    const jwtPayload = createJwtPayload(createdUser);
 
     accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
       expiresIn: '10days',
     });
   } else {
-    ownerId = existingUser.id;
+    // if user already exist just send token for login
+    ownerId = existingUser?.id;
 
-    // jwt create access token for new registrated user
-    const jwtPayload = {
-      _id: existingUser._id,
-      phone: existingUser.phone,
-    };
+    // jwt create access token for loggedIn user
+    const jwtPayload: TUserJwtPayload = createJwtPayload(existingUser);
 
     accessToken = jwtHelpers.generateJwtToken(
       jwtPayload,

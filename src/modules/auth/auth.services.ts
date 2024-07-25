@@ -2,9 +2,10 @@
 import httpStatus from 'http-status';
 import { User } from '../user/user.model';
 import AppError from '../../errors/AppError';
-
 import config from '../../config';
 import { createToken } from './auth.utils';
+import { TUserJwtPayload } from '../../interface';
+import createJwtPayload from '../../utils/createJwtPayload';
 
 const login = async (payload: any) => {
   const isUserExist = await User.findOne({ phone: payload?.phone });
@@ -25,11 +26,7 @@ const login = async (payload: any) => {
 
   //create token and sent to the  client
 
-  const jwtPayload = {
-    _id: isUserExist._id,
-    phone: isUserExist.phone,
-    role: isUserExist?.role,
-  };
+  const jwtPayload: TUserJwtPayload = createJwtPayload(isUserExist);
 
   const accessToken = createToken(
     jwtPayload,
