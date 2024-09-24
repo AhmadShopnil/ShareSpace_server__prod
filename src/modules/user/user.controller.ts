@@ -7,6 +7,7 @@ const registerUser = async (
   next: NextFunction,
 ) => {
   try {
+
     const result = await UserServices?.createUserToDb(req.body);
 
     res.status(201).json({

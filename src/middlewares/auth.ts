@@ -6,7 +6,7 @@ import { Secret } from 'jsonwebtoken';
 import { jwtHelpers } from '../utils/jwtHelpers';
 import config from '../config';
 // import ApiError from '../errors/ApiError';
-import { TUserTwtPayload } from '../interface';
+import { TUserJwtPayload } from '../interface';
 
 const auth = () => async (req: any, res: Response, next: NextFunction) => {
   try {
@@ -29,7 +29,7 @@ const auth = () => async (req: any, res: Response, next: NextFunction) => {
     const verifiedUser = jwtHelpers.verifyToken(
       token,
       config.jwt_access_secret as Secret,
-    ) as TUserTwtPayload;
+    ) as TUserJwtPayload;
 
     req.user = verifiedUser;
 
