@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(
   cors({
-    origin: ['http://localhost:3000', 'https://share-space-client.vercel.app'],
+    origin: ['http://localhost:3000', 'https://share-space-tangail.vercel.app/','https://share-space-client.vercel.app'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   }),

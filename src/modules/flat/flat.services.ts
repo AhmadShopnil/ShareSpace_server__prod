@@ -65,23 +65,30 @@ const addFlatToDb = async ({
   };
 };
 
-const getAllFlatsFromDb = async (query: Record<string, unknown>) => {
-  const flatQuery = new QueryBuilder(Flat.find({ isDeleted: false }), query)
-    .search(flatSearchableFields)
-    .filter()
-    .rangeFilter()
-    .sort()
-    .paginate()
-    .fields();
+// const getAllFlatsFromDb = async (query: Record<string, unknown>) => {
+//   const flatQuery = new QueryBuilder(Flat.find({ isDeleted: false }), query)
+//     .search(flatSearchableFields)
+//     .filter()
+//     .rangeFilter()
+//     .sort()
+//     .paginate()
+//     .fields();
 
-  const meta = await flatQuery.countTotal();
-  const flats = await flatQuery.modelQuery;
+//   const meta = await flatQuery.countTotal();
+//   const flats = await flatQuery.modelQuery;
 
-  return {
-    meta,
-    flats,
-  };
-};
+//   const result = await Flat.find();
+
+//   return {
+//     meta,
+//     flats,
+//   };
+// };
+
+
+
+
+
 const getFlatFromDbByUser = async (ownerId: string) => {
   // Check if the provided ID is valid
   if (!mongoose.Types.ObjectId.isValid(ownerId)) {
@@ -102,6 +109,24 @@ const getFlatFromDbByUser = async (ownerId: string) => {
   }
 
   return flat;
+};
+const getAllFlatsFromDb = async (query: Record<string, unknown>) => {
+  const flatQuery = new QueryBuilder(Flat.find(), query)
+    .search(flatSearchableFields)
+    .filter()
+    .rangeFilter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const meta = await flatQuery.countTotal();
+  // const result = await flatQuery.modelQuery;
+  const flats = await flatQuery.modelQuery;
+
+  return {
+    meta,
+    flats,
+  };
 };
 const getFlatFromDbById = async (id: string) => {
   // Check if the provided ID is valid
